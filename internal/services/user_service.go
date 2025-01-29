@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"havoAPI/internal/model"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // UsersServiceInterface defines the methods that a user service should implement.
 type UsersServiceInterface interface {
-	// InsertNewUser handles the creation of a new user, including password hashing and insertion into the DB.
 	InsertNewUser(name, surname, username, password string) error
-	// UserAuthentication checks user credentials (username and password) and returns user ID if valid.
 	UserAuthentication(username, password string) (int, error)
+	APIKeyAuthorization(apiKey string) (bool, error)
+	FetchUserAPIKey(userID int) (string, error)
 }
 
 // UsersService is a concrete implementation of the UsersServiceInterface.
@@ -37,7 +38,7 @@ func (s *UsersService) InsertNewUser(name, surname, username, password string) e
 	}
 
 	// Insert the new user into the database
-	err = s.db.InsertUser(name, surname, username, hashed_password)
+	userID, err := s.db.InsertUser(name, surname, username, hashed_password)
 	if err != nil {
 		// Check if the error is due to a duplicated username
 		if errors.Is(err, model.ErrDuplicatedUsername) {
@@ -46,7 +47,13 @@ func (s *UsersService) InsertNewUser(name, surname, username, password string) e
 		// Return the error if the insertion fails
 		return fmt.Errorf("error occured while intersing user: %w", err)
 	}
-	// Return nil if the user is successfully inserted
+
+	err = s.GenerateNewApiKey(userID)
+	if err != nil {
+		return err
+	}
+
+	// Return nil if the user is successfully inserted and API key genereted successfully
 	return nil
 }
 
@@ -72,4 +79,43 @@ func (s *UsersService) UserAuthentication(username, password string) (int, error
 
 	// Return the user ID if authentication is successful
 	return userID, nil
+}
+
+// GenerateNewApiKey generates a new API key for the user.
+// It creates a unique API key using UUID and inserts it into the database.
+// If an error occurs during the insertion, it is returned.
+func (s *UsersService) GenerateNewApiKey(userID int) error {
+	// Generate a new unique API key using UUID
+	newAPIKey := uuid.New().String()
+
+	// Insert the generated API key into the database for the user
+	err := s.db.InsertUserAPIKey(userID, newAPIKey)
+	if err != nil {
+		// Return an error if inserting the API key into the database fails
+		return fmt.Errorf("error occured while inserting new api key: %w", err)
+	}
+
+	// Return nil indicating successful generation and insertion of the API key
+	return nil
+}
+
+func (s *UsersService) FetchUserAPIKey(userID int) (string, error) {
+	apiKey, err := s.db.RetriveUserAPIKey(userID)
+	if err != nil {
+		return "", fmt.Errorf("error occured while fetching user API key: %w", err)
+	}
+
+	return apiKey, nil
+}
+
+func (s *UsersService) APIKeyAuthorization(apiKey string) (bool, error) {
+	isKeyTrue, err := s.db.CheckUserAPIKey(apiKey)
+	if err != nil {
+		if errors.Is(err, model.ErrAPIKeyNotFound) {
+			return false, ErrAPIKeyNotFound
+		}
+		return false, fmt.Errorf("error occured while checking user API key: %w", err)
+	}
+
+	return isKeyTrue, nil
 }

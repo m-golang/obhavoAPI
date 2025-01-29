@@ -100,18 +100,57 @@ func (service *UserHandler) Login(c *gin.Context) {
 	helpers.SetCookie(c, tokenString)
 
 	// Return a success response after successful login
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Login complete! Explore what's new!",
 	})
 }
 
 // Logout handles user logout by clearing the JWT token from the client's cookies.
-func (s *UserHandler) Logout(c *gin.Context) {
+func (service *UserHandler) Logout(c *gin.Context) {
 	// Clear the JWT token stored in the "u_auth" cookie
 	c.SetCookie("u_auth", "", -1, "", "", false, true)
 
 	// Return a success response after logout
 	c.JSON(http.StatusOK, gin.H{
 		"message": "You are now logged out. Have a great day!",
+	})
+}
+
+func (service *UserHandler) UserDashboard(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	user_id := int(userID.(float64))
+
+	apiKey, err := service.user.FetchUserAPIKey(user_id)
+	if err != nil {
+		helpers.ServerError(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"key": apiKey,
+	})
+}
+
+func (service *UserHandler) WeatherData(c *gin.Context) {
+	apiKey, query, err := helpers.GetParametersFromUrl(c)
+	if err != nil {
+		helpers.ClientError(c, http.StatusBadRequest, fmt.Sprintf("%v", err))
+		return
+	}
+
+	isKeyTrue, err := service.user.APIKeyAuthorization(apiKey)
+	if err != nil {
+		if errors.Is(err, services.ErrAPIKeyNotFound) {
+			helpers.ClientError(c, http.StatusUnauthorized, "API key has been disabled.")
+			return
+		}
+		helpers.ServerError(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"isKeyTrue": isKeyTrue,
+		"apiKey":    apiKey,
+		"query":     query,
 	})
 }

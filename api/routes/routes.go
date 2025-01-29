@@ -29,6 +29,10 @@ func Route(h *ServeHandlerWrapper) *gin.Engine {
 
 		// POST /v1/logout: Route for logging out; requires JWT authorization middleware
 		v1.POST("/logout", middlewares.UserAuthorizationJWT(), h.Logout)
+
+		v1.GET("/user/dashboard", middlewares.UserAuthorizationJWT(), h.UserDashboard)
+
+		v1.GET("/weather", h.WeatherData)
 	}
 
 	// Return the configured router to be used by the web server
