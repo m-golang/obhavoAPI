@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"havoAPI/api/config"
+	"havoAPI/api/handlers"
+	"havoAPI/api/routes"
 	"havoAPI/internal/model"
+	"havoAPI/internal/services"
 	"log"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -39,7 +41,13 @@ func main() {
 	}
 	defer db.Close()
 
-	router := gin.Default()
+	usersService := services.NewUsersService(db)
+	usersHandler := handlers.NewUsersHandler(usersService)
+
+	serveHandlerWrapper := &routes.ServeHandlerWrapper{
+		UserHandler: usersHandler,
+	}
+	router := routes.Route(serveHandlerWrapper)
 
 	router.Run()
 
