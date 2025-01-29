@@ -1,0 +1,30 @@
+# Go build output
+/bin/
+/obj/
+
+# Dependency directories
+/vendor/
+
+# Go workspace
+*.workspace
+
+# Golang specific files
+*.exe
+*.exe~
+*.test
+*.out
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment variables file
+.env
+
+# Logs
+*.log
+
+# Build and test output directories
+coverage/
