@@ -15,3 +15,11 @@ type userLoginForm struct {
 	Username string `json:"username" binding:"required"` // The user's username for login; must be provided in the request body
 	Password string `json:"password" binding:"required"` // The user's password for login; must be provided in the request body
 }
+
+type LocationsForm struct {
+	Locations []Location `json:"locations" binding:"required"`
+}
+
+type Location struct {
+	Q string `json:"q" binding:"required"`
+}

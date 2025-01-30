@@ -1,6 +1,9 @@
 package services
 
-
+import (
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+)
 
 func formatWeatherData(weatherData Weather) FormattedWeatherData {
 	var formattedData FormattedWeatherData
@@ -23,7 +26,6 @@ func formatWeatherData(weatherData Weather) FormattedWeatherData {
 
 	return formattedData
 }
-
 
 func getTempColor(tempC float64) string {
 	if tempC < -20 {
@@ -75,4 +77,9 @@ func getCloudColor(cloud int) string {
 		return "#616161" // Dark Gray
 	}
 	return "#FFFFFF" // Default color if no condition matches
+}
+
+func capitalizeFirstLetter(s string) string {
+	caser := cases.Title(language.Und)
+	return caser.String(s)
 }

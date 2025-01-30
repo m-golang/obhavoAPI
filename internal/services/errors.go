@@ -14,6 +14,6 @@ var ErrInvalidUserCredentials = errors.New("services: Invalid user credentials")
 var ErrAPIKeyNotFound = errors.New("models: API Key not found")
 var ErrNoLocationFound = errors.New("no matching location found")
 
-
 var ErrUnexpectedEndOfJSONInput = errors.New("unexpected end of JSON input")
 
+var ErrNoDataCache = errors.New("no data in cache for location")

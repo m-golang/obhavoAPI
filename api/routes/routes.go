@@ -19,6 +19,9 @@ func Route(h *ServeHandlerWrapper) *gin.Engine {
 	// Create a new Gin router with default middleware (logging, recovery, etc.)
 	router := gin.Default()
 
+	router.Use(middlewares.RecoverPanic())
+	router.Use(middlewares.SecureHeaders())
+	
 	// Define version 1 of the API routes.
 	v1 := router.Group("/v1")
 	{
@@ -34,6 +37,7 @@ func Route(h *ServeHandlerWrapper) *gin.Engine {
 		v1.GET("/user/dashboard", middlewares.UserAuthorizationJWT(), h.UserDashboard)
 
 		v1.GET("/weather", h.WeatherData)
+		v1.POST("/weather", h.BulkWeatherData)
 	}
 
 	// Return the configured router to be used by the web server
