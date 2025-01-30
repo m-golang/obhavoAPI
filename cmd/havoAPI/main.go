@@ -6,7 +6,7 @@ import (
 	"havoAPI/api/handlers"
 	"havoAPI/api/routes"
 	"havoAPI/internal/model"
-	"havoAPI/internal/services"
+	"havoAPI/internal/services/users"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -41,7 +41,7 @@ func main() {
 	}
 	defer db.Close()
 
-	usersService := services.NewUsersService(db)
+	usersService := users.NewUsersService(db)
 	usersHandler := handlers.NewUsersHandler(usersService)
 
 	serveHandlerWrapper := &routes.ServeHandlerWrapper{

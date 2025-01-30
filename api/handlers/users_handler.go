@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"havoAPI/api/helpers"
-	"havoAPI/internal/services"
+	"havoAPI/internal/services/users"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,11 +12,11 @@ import (
 
 // UserHandler is a struct that holds the service for user-related operations.
 type UserHandler struct {
-	user services.UsersServiceInterface // Interface to interact with the user service layer
+	user users.UsersServiceInterface // Interface to interact with the user service layer
 }
 
 // NewUsersHandler creates a new instance of UserHandler with the provided user service.
-func NewUsersHandler(user services.UsersServiceInterface) *UserHandler {
+func NewUsersHandler(user users.UsersServiceInterface) *UserHandler {
 	return &UserHandler{user: user}
 }
 
@@ -43,7 +43,7 @@ func (service *UserHandler) Signup(c *gin.Context) {
 	err := service.user.InsertNewUser(newUser.Name, newUser.Surname, newUser.Username, newUser.Password)
 	if err != nil {
 		// Handle case when the username already exists
-		if errors.Is(err, services.ErrUsernameExists) {
+		if errors.Is(err, users.ErrUsernameExists) {
 			helpers.ClientError(c, http.StatusConflict, "Username already exists. Consider using a different one or check if you already have an account.")
 			return
 		}
@@ -74,11 +74,11 @@ func (service *UserHandler) Login(c *gin.Context) {
 	userID, err := service.user.UserAuthentication(userLogin.Username, userLogin.Password)
 	if err != nil {
 		// Handle cases for user not found or invalid credentials
-		if errors.Is(err, services.ErrUserNotFound) {
+		if errors.Is(err, users.ErrUserNotFound) {
 			helpers.ClientError(c, http.StatusNotFound, "User not found")
 			return
 		}
-		if errors.Is(err, services.ErrInvalidUserCredentials) {
+		if errors.Is(err, users.ErrInvalidUserCredentials) {
 			helpers.ClientError(c, http.StatusUnauthorized, "Invalid user credentials")
 			return
 		}
@@ -140,7 +140,7 @@ func (service *UserHandler) WeatherData(c *gin.Context) {
 
 	isKeyTrue, err := service.user.APIKeyAuthorization(apiKey)
 	if err != nil {
-		if errors.Is(err, services.ErrAPIKeyNotFound) {
+		if errors.Is(err, users.ErrAPIKeyNotFound) {
 			helpers.ClientError(c, http.StatusUnauthorized, "API key has been disabled.")
 			return
 		}
