@@ -21,7 +21,7 @@ func Route(h *ServeHandlerWrapper) *gin.Engine {
 
 	router.Use(middlewares.RecoverPanic())
 	router.Use(middlewares.SecureHeaders())
-	
+	router.Use(middlewares.RateLimiter())
 	// Define version 1 of the API routes.
 	v1 := router.Group("/v1")
 	{

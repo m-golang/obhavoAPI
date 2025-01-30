@@ -27,3 +27,7 @@ func ClientError(c *gin.Context, code int, message string) {
 	})
 }
 
+func RateLimitExceededResponse(c *gin.Context) {
+	message := "rate limit exceeded"
+	ClientError(c,http.StatusTooManyRequests,message)
+}
