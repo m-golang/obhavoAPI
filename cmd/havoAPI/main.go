@@ -10,6 +10,7 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
@@ -51,8 +52,39 @@ func main() {
 		UserHandler:    usersHandler,
 		WeatherHandler: weatherapiHandler,
 	}
+
+	cronJob := cron.New()
+	_, err = cronJob.AddFunc("@every 30m", func() {
+		err := weatherAPIService.UpdateWeatherDataInTheRedisCache()
+		if err != nil {
+			log.Printf("Error updating weather data in cache: %v", err)
+		} else {
+			log.Println("Weather data updated successfully!")
+		}
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+
+	// Manually trigger the first job immediately on app start
+	// err = weatherAPIService.UpdateWeatherDataInTheRedisCache()
+	// if err != nil {
+	// 	log.Printf("Error updating weather data in cache on startup: %v", err)
+	// } else {
+	// 	log.Println("Weather data updated immediately on startup!")
+	// }
+
+
+	go cronJob.Start()
+
 	router := routes.Route(serveHandlerWrapper)
 
-	router.Run()
+	go func() {
+		if err := router.Run(); err != nil {
+			log.Fatal("error running the server")
+		}
+	}()
 
+	select {}
 }
