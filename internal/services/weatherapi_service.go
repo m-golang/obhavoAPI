@@ -53,6 +53,7 @@ func NewWeatherAPIService(db models.DBContractWeatherapi) *WeatherAPIService {
 }
 
 func (s *WeatherAPIService) FetchWeatherData(q string) (FormattedWeatherData, error) {
+	q = capitalizeFirstLetter(q)
 	cachedData, err := s.retrieveWeatherDataFromRedisCache(q)
 	if errors.Is(err, nil) {
 		return cachedData, nil
@@ -63,7 +64,6 @@ func (s *WeatherAPIService) FetchWeatherData(q string) (FormattedWeatherData, er
 		if err != nil {
 			return FormattedWeatherData{}, err
 		}
-		log.Println("No cache found")
 		query := strings.Replace(q, " ", "%20", -1)
 
 		url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=%s&q=%s&aqi=no", apiKeyForWeatherAPI, query)
@@ -86,7 +86,7 @@ func (s *WeatherAPIService) FetchWeatherData(q string) (FormattedWeatherData, er
 
 		formattedData := formatWeatherData(weatherData)
 
-		err = s.cacheTheWeatherDataToRedis(formattedData.Name, formattedData)
+		err = s.cacheTheWeatherDataToRedis(query, formattedData)
 		if err != nil {
 			log.Fatalf("Error caching weather data: %v", err)
 		}
@@ -198,7 +198,6 @@ func (s *WeatherAPIService) deleteAllWeatherDataFromRedisCache() error {
 	if err != nil {
 		return fmt.Errorf("failed to flush Redis database: %v", err)
 	}
-	log.Printf("Successfully deleted weather data for all locations")
 	return nil
 }
 

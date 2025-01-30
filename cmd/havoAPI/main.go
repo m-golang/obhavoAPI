@@ -66,15 +66,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-
 	// Manually trigger the first job immediately on app start
-	// err = weatherAPIService.UpdateWeatherDataInTheRedisCache()
-	// if err != nil {
-	// 	log.Printf("Error updating weather data in cache on startup: %v", err)
-	// } else {
-	// 	log.Println("Weather data updated immediately on startup!")
-	// }
-
+	err = weatherAPIService.UpdateWeatherDataInTheRedisCache()
+	if err != nil {
+		log.Printf("Error updating weather data in cache on startup: %v", err)
+	} else {
+		log.Println("Weather data updated immediately on startup!")
+	}
 
 	go cronJob.Start()
 
