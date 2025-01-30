@@ -5,8 +5,8 @@ import (
 	"havoAPI/api/config"
 	"havoAPI/api/handlers"
 	"havoAPI/api/routes"
-	"havoAPI/internal/model"
-	"havoAPI/internal/services/users"
+	"havoAPI/internal/models"
+	"havoAPI/internal/services"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -35,17 +35,21 @@ func main() {
 
 	dsn := fmt.Sprintf("%v:%v@/%v?parseTime=true", dbUserName, dbUserPassword, dbName)
 
-	db, err := model.OpenDB(dsn)
+	db, err := models.OpenDB(dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	usersService := users.NewUsersService(db)
+	usersService := services.NewUsersService(db)
 	usersHandler := handlers.NewUsersHandler(usersService)
 
+	weatherAPIService := services.NewWeatherAPIService(db)
+	weatherapiHandler := handlers.NewWeatherHandler(weatherAPIService)
+
 	serveHandlerWrapper := &routes.ServeHandlerWrapper{
-		UserHandler: usersHandler,
+		UserHandler:    usersHandler,
+		WeatherHandler: weatherapiHandler,
 	}
 	router := routes.Route(serveHandlerWrapper)
 

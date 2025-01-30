@@ -10,6 +10,7 @@ import (
 // ServeHandlerWrapper wraps the UserHandler to provide HTTP handler functionality.
 type ServeHandlerWrapper struct {
 	*handlers.UserHandler // Embeds the UserHandler to use its methods for routing
+	*handlers.WeatherHandler
 }
 
 // Route sets up the routes and handlers for the application.

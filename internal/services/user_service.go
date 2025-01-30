@@ -1,9 +1,9 @@
-package users
+package services
 
 import (
 	"errors"
 	"fmt"
-	"havoAPI/internal/model"
+	"havoAPI/internal/models"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -13,17 +13,16 @@ import (
 type UsersServiceInterface interface {
 	InsertNewUser(name, surname, username, password string) error
 	UserAuthentication(username, password string) (int, error)
-	APIKeyAuthorization(apiKey string) (bool, error)
 	FetchUserAPIKey(userID int) (string, error)
 }
 
 // UsersService is a concrete implementation of the UsersServiceInterface.
 type UsersService struct {
-	db model.DBContractUsers // The DBContractUsers interface represents the database operations for users.
+	db models.DBContractUsers // The DBContractUsers interface represents the database operations for users.
 }
 
 // NewUsersService is a constructor function that returns a new instance of UsersService.
-func NewUsersService(db model.DBContractUsers) *UsersService {
+func NewUsersService(db models.DBContractUsers) *UsersService {
 	return &UsersService{db: db}
 }
 
@@ -41,7 +40,7 @@ func (s *UsersService) InsertNewUser(name, surname, username, password string) e
 	userID, err := s.db.InsertUser(name, surname, username, hashed_password)
 	if err != nil {
 		// Check if the error is due to a duplicated username
-		if errors.Is(err, model.ErrDuplicatedUsername) {
+		if errors.Is(err, models.ErrDuplicatedUsername) {
 			return ErrUsernameExists
 		}
 		// Return the error if the insertion fails
@@ -64,7 +63,7 @@ func (s *UsersService) UserAuthentication(username, password string) (int, error
 	userID, passwordHash, err := s.db.RetrieveUserCredentials(username)
 	if err != nil {
 		// Check if the error indicates the user does not exist
-		if errors.Is(err, model.ErrUserNotFound) {
+		if errors.Is(err, models.ErrUserNotFound) {
 			return 0, ErrUserNotFound
 		}
 		// Return an error if retrieving credentials fails
@@ -106,16 +105,4 @@ func (s *UsersService) FetchUserAPIKey(userID int) (string, error) {
 	}
 
 	return apiKey, nil
-}
-
-func (s *UsersService) APIKeyAuthorization(apiKey string) (bool, error) {
-	isKeyTrue, err := s.db.CheckUserAPIKey(apiKey)
-	if err != nil {
-		if errors.Is(err, model.ErrAPIKeyNotFound) {
-			return false, ErrAPIKeyNotFound
-		}
-		return false, fmt.Errorf("error occured while checking user API key: %w", err)
-	}
-
-	return isKeyTrue, nil
 }

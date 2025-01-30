@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"database/sql"
@@ -12,7 +12,7 @@ import (
 // related to users. This ensures that any struct implementing this interface
 // must provide implementations for inserting users and retrieving user credentials.
 type DBContractUsers interface {
-	InsertUser(name, surname, username string, password_hash []byte)(int, error)
+	InsertUser(name, surname, username string, password_hash []byte) (int, error)
 	RetrieveUserCredentials(username string) (int, string, error)
 	InsertUserAPIKey(userID int, apiKey string) error
 	CheckUserAPIKey(apiKey string) (bool, error)
@@ -109,26 +109,10 @@ func (msql *MySQL) RetriveUserAPIKey(userID int) (string, error) {
 
 	var apiKey string
 
-	err := msql.DB.QueryRow(stmt,userID).Scan(&apiKey)
+	err := msql.DB.QueryRow(stmt, userID).Scan(&apiKey)
 	if err != nil {
 		return "", fmt.Errorf("failed to retrive user api key: %w", err)
 	}
 
 	return apiKey, nil
-}
-
-func (msql *MySQL) CheckUserAPIKey(apiKey string) (bool, error) {
-	stmt := `SELECT COUNT(*) FROM api_keys WHERE api_key=?`
-
-	var count int
-
-	err := msql.DB.QueryRow(stmt, apiKey).Scan(&count)
-	if err != nil {
-		return false, fmt.Errorf("failed to scan count of api key in the database: %w", err)
-	}
-
-	if count > 0 {
-		return true, nil
-	}
-	return false, ErrAPIKeyNotFound
 }
