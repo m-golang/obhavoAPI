@@ -163,7 +163,7 @@ func (s *WeatherAPIService) cacheTheWeatherData(location string, weatherData For
 		return fmt.Errorf("failed to marshal weatherData: %w", err)
 	}
 
-	err = s.redisClient.Set(context.Background(), location, jsonData, 10*time.Minute).Err()
+	err = s.redisClient.Set(context.Background(), location, jsonData, 30*time.Minute).Err()
 	if err != nil {
 		return fmt.Errorf("failed to set data in Redis: %w", err)
 	}
