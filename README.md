@@ -264,7 +264,7 @@ The Weather API Service provides weather data retrieval capabilities, including 
                                "q": "locationNotFound"
                              }
                            ]
-           }
+           }'
    ```
 
    - **Response:**
