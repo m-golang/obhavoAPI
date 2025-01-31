@@ -272,47 +272,47 @@ The Weather API Service provides weather data retrieval capabilities, including 
    ```bash
    {
     "bulk": [
-        {
-            "name": "New York",
-            "country": "United States of America",
-            "lat": 40.7142,
-            "lon": -74.0064,
-            "temp_c": 0.6,
-            "temp_color": "#E6F7FF",
-            "wind_kph": 14.4,
-            "wind_color": "#B2EBF2",
-            "cloud": 0,
-            "cloud_color": "#FFF9C4"
-        },
-        {
-            "name": "London",
-            "country": "United Kingdom",
-            "lat": 51.5171,
-            "lon": -0.1062,
-            "temp_c": 4,
-            "temp_color": "#E6F7FF",
-            "wind_kph": 3.6,
-            "wind_color": "#E0F7FA",
-            "cloud": 75,
-            "cloud_color": "#9E9E9E"
-        },
-        {
-            "name": "Tashkent",
-            "country": "Uzbekistan",
-            "lat": 41.3167,
-            "lon": 69.25,
-            "temp_c": 2.3,
-            "temp_color": "#E6F7FF",
-            "wind_kph": 3.6,
-            "wind_color": "#E0F7FA",
-            "cloud": 100,
-            "cloud_color": "#616161"
-        }
-    ],
-    "not_found": [
-        "'locationNotFound' not found"
-    ]
-  }```
+              {
+                  "name": "New York",
+                  "country": "United States of America",
+                  "lat": 40.7142,
+                  "lon": -74.0064,
+                  "temp_c": 0.6,
+                  "temp_color": "#E6F7FF",
+                  "wind_kph": 14.4,
+                  "wind_color": "#B2EBF2",
+                  "cloud": 0,
+                  "cloud_color": "#FFF9C4"
+              },
+              {
+                  "name": "London",
+                  "country": "United Kingdom",
+                  "lat": 51.5171,
+                  "lon": -0.1062,
+                  "temp_c": 4,
+                  "temp_color": "#E6F7FF",
+                  "wind_kph": 3.6,
+                  "wind_color": "#E0F7FA",
+                  "cloud": 75,
+                  "cloud_color": "#9E9E9E"
+              },
+              {
+                  "name": "Tashkent",
+                  "country": "Uzbekistan",
+                  "lat": 41.3167,
+                  "lon": 69.25,
+                  "temp_c": 2.3,
+                  "temp_color": "#E6F7FF",
+                  "wind_kph": 3.6,
+                  "wind_color": "#E0F7FA",
+                  "cloud": 100,
+                  "cloud_color": "#616161"
+              }
+            ],
+            "not_found": [
+                "'locationNotFound' not found"
+            ]
+    }```
 
 ## Error Handling
 
