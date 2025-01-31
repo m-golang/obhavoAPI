@@ -16,25 +16,27 @@ type UserHandler struct {
 }
 
 // NewUsersHandler creates a new instance of UserHandler with the provided user service.
+// This is typically called when setting up the handler for routing.
 func NewUsersHandler(user services.UsersServiceInterface) *UserHandler {
 	return &UserHandler{user: user}
 }
 
 // Signup handles the user signup process.
 // It expects a JSON body with user details and performs validation, password checks, and user creation.
+// Responds with appropriate errors or success message based on the signup outcome.
 func (service *UserHandler) Signup(c *gin.Context) {
 	var newUser newUserForm
 
 	// Bind incoming JSON data to the newUser form
 	if err := c.ShouldBindJSON(&newUser); err != nil {
-		// If validation fails, respond with validation errors
+		// If binding fails, respond with validation errors
 		helpers.RespondWithValidationErrors(c, err, newUser)
 		return
 	}
 
 	// Validate the password (e.g., length, complexity)
 	if err := helpers.ValidatePassword(newUser.Password); err != nil {
-		// Respond with a client error if the password is invalid
+		// If the password is invalid, respond with a client error
 		helpers.ClientError(c, http.StatusBadRequest, fmt.Sprintf("%v", err))
 		return
 	}
@@ -60,12 +62,13 @@ func (service *UserHandler) Signup(c *gin.Context) {
 
 // Login handles the user login process.
 // It expects a JSON body with username and password, then validates and authenticates the user.
+// If successful, a JWT token is generated and sent as a cookie.
 func (service *UserHandler) Login(c *gin.Context) {
 	var userLogin userLoginForm
 
 	// Bind incoming JSON data to the userLogin form
 	if err := c.ShouldBindJSON(&userLogin); err != nil {
-		// If validation fails, respond with validation errors
+		// If binding fails, respond with validation errors
 		helpers.RespondWithValidationErrors(c, err, userLogin)
 		return
 	}
@@ -106,6 +109,7 @@ func (service *UserHandler) Login(c *gin.Context) {
 }
 
 // Logout handles user logout by clearing the JWT token from the client's cookies.
+// It sends a success message once the token is removed.
 func (service *UserHandler) Logout(c *gin.Context) {
 	// Clear the JWT token stored in the "u_auth" cookie
 	c.SetCookie("u_auth", "", -1, "", "", false, true)
@@ -116,17 +120,22 @@ func (service *UserHandler) Logout(c *gin.Context) {
 	})
 }
 
+// UserDashboard fetches the user's API key and returns it in the response.
+// The user must be authenticated and the ID is extracted from the context.
 func (service *UserHandler) UserDashboard(c *gin.Context) {
+	// Get the userID from the context (which should have been set during authentication)
 	userID, _ := c.Get("userID")
 	user_id := int(userID.(float64))
 
+	// Fetch the API key for the authenticated user
 	apiKey, err := service.user.FetchUserAPIKey(user_id)
 	if err != nil {
 		helpers.ServerError(c, err)
 		return
 	}
 
+	// Return the API key in the response
 	c.JSON(http.StatusOK, gin.H{
-		"key": apiKey,
+		"Your API key": apiKey,
 	})
 }

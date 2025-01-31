@@ -82,51 +82,72 @@ func ValidatePassword(password string) error {
 	return nil
 }
 
+// GetParametersFromUrl extracts the API key and query parameters from the URL.
+// It returns the API key, query parameter, and an error if either is missing or invalid.
 func GetParametersFromUrl(c *gin.Context) (string, string, error) {
+	// Extract the 'key' parameter (API key) from the URL query string
 	apiKey := c.Query("key")
 	if len(apiKey) == 0 || len(strings.TrimSpace(apiKey)) == 0 {
+		// If the API key is missing or invalid, return an error
 		return "", "", fmt.Errorf("api key is missing or invalid. Please include a valid API key in your request")
 	}
 
+	// Extract the 'q' parameter (query) from the URL query string
 	query := c.Query("q")
 	if len(query) == 0 || len(strings.TrimSpace(query)) == 0 {
-
+		// If the query is missing or invalid, return an error
 		return "", "", fmt.Errorf("parameter q is missing")
 	}
 
+	// Return the API key and query if both are valid
 	return apiKey, query, nil
 }
 
+// GetParametersFromUrlForBulk extracts the API key and checks if the 'q' parameter is set to 'bulk'.
+// It returns the API key and an error if either condition is violated.
 func GetParametersFromUrlForBulk(c *gin.Context) (string, error) {
+	// Extract the 'key' parameter (API key) from the URL query string
 	apiKey := c.Query("key")
 	if len(apiKey) == 0 || len(strings.TrimSpace(apiKey)) == 0 {
+		// If the API key is missing or invalid, return an error
 		return "", fmt.Errorf("api key is missing or invalid. Please include a valid API key in your request")
 	}
 
+	// Extract the 'q' parameter (query) and check if it equals 'bulk'
 	query := c.Query("q")
 	if query != "bulk" {
+		// If 'q' is not set to 'bulk', return an error
 		return "", fmt.Errorf("parameter q='bulk' is required")
 	}
 
+	// Return the API key if it is valid
 	return apiKey, nil
 }
 
+// FilterValidQValues filters the valid 'q' values from a LocationsForm or similar struct.
+// It extracts the 'Q' field from each location and returns a slice of valid non-empty strings.
 func FilterValidQValues(data interface{}) []string {
 	var qValues []string
 
+	// Get the reflect value of the input data
 	val := reflect.ValueOf(data)
 
+	// Check if the input data is a struct, as we're expecting a struct type with a 'Locations' field
 	if val.Kind() != reflect.Struct {
-		return qValues
+		return qValues // Return an empty slice if the data is not a struct
 	}
 
+	// Extract the 'Locations' field, which should be a slice of Location structs
 	locationsField := val.FieldByName("Locations")
 	if locationsField.IsValid() && locationsField.Kind() == reflect.Slice {
+		// Iterate over each location in the 'Locations' slice
 		for i := 0; i < locationsField.Len(); i++ {
 			location := locationsField.Index(i)
 
+			// Extract the 'Q' field from each location (the query string)
 			qField := location.FieldByName("Q")
 			if qField.IsValid() && qField.Kind() == reflect.String {
+				// If the 'Q' field is a non-empty string, append it to the result slice
 				qValue := qField.String()
 				if qValue != "" && qValue != " " {
 					qValues = append(qValues, qValue)
@@ -135,5 +156,6 @@ func FilterValidQValues(data interface{}) []string {
 		}
 	}
 
+	// Return the slice of valid 'q' values
 	return qValues
 }

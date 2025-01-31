@@ -16,10 +16,14 @@ type userLoginForm struct {
 	Password string `json:"password" binding:"required"` // The user's password for login; must be provided in the request body
 }
 
+// LocationsForm represents the structure of the form for submitting location data.
+// The Locations field is a slice of Location objects and is required for form submission.
 type LocationsForm struct {
-	Locations []Location `json:"locations" binding:"required"`
+	Locations []Location `json:"locations" binding:"required"` // A list of locations to be submitted, must not be empty.
 }
 
+// Location represents a single location query.
+// The Q field stores the query string and is required for a valid Location.
 type Location struct {
-	Q string `json:"q" binding:"required"`
+	Q string `json:"q" binding:"required"` // The location query string, must not be empty.
 }

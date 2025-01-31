@@ -27,7 +27,9 @@ func ClientError(c *gin.Context, code int, message string) {
 	})
 }
 
+// RateLimitExceededResponse handles the case when a user exceeds the rate limit.
+// It sends a response with a "rate limit exceeded" message and a 429 Too Many Requests status.
 func RateLimitExceededResponse(c *gin.Context) {
-	message := "rate limit exceeded"
-	ClientError(c,http.StatusTooManyRequests,message)
+	message := "rate limit exceeded"                    // The message to be sent in the response
+	ClientError(c, http.StatusTooManyRequests, message) // Send the error response with status 429
 }
