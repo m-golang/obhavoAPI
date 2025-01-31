@@ -77,7 +77,7 @@ The Weather API Service provides weather data retrieval capabilities, including 
 - **Endpoint:** `POST /api/v1/signup`
 - **Description:** Registers a new user with the given details.
 - **Request Body:**
-  ``bash
+  ```bash
   {
     "name": "John",
     "surname": "Doe",
