@@ -11,7 +11,7 @@ A robust and efficient weather data service that allows users to fetch weather i
   - [User Registration](#user-registration)
   - [User Authentication](#user-authentication)
   - [User Dashboard](#user-dashboard)
-  - [User Logout](#user-logout)
+  - [User Logout](#User-Logut)
   - [Fetch Weather Data](#fetch-weather-data)
   - [Fetch Bulk Weather Data](#fetch-bulk-weather-data)
 - [Error Handling](#error-handling)
@@ -182,62 +182,62 @@ The Weather API Service provides weather data retrieval capabilities, including 
    curl --location --request POST 'localhost:8080/api/v1/weather.current?key={your-api-key}&q=bulk' \
    --header 'Content-Type: application/json' \
    --data '{
-   "locations": [
-   {
-   "q": "new york"
-   },
-   {
-   "q": "london"
-   },
-   {
-   "q": "tashkent"
-   }
-   ]
-   }'
+             "locations": [
+                           {
+                             "q": "new york"
+                           },
+                           {
+                             "q": "london"
+                           },
+                           {
+                             "q": "tashkent"
+                           }
+                           ]
+           }'
    ```
 
    - **Response:**
 
    ```bash
    {
-   "bulk": [
-   {
-   "name": "New York",
-   "country": "United States of America",
-   "lat": 40.7142,
-   "lon": -74.0064,
-   "temp_c": 1.7,
-   "temp_color": "#E6F7FF",
-   "wind_kph": 15.1,
-   "wind_color": "#B2EBF2",
-   "cloud": 75,
-   "cloud_color": "#9E9E9E"
-   },
-   {
-   "name": "London",
-   "country": "United Kingdom",
-   "lat": 51.5171,
-   "lon": -0.1062,
-   "temp_c": 3.1,
-   "temp_color": "#E6F7FF",
-   "wind_kph": 4.7,
-   "wind_color": "#E0F7FA",
-   "cloud": 100,
-   "cloud_color": "#616161"
-   },
-   {
-   "name": "Tashkent",
-   "country": "Uzbekistan",
-   "lat": 41.3167,
-   "lon": 69.25,
-   "temp_c": 1.3,
-   "temp_color": "#E6F7FF",
-   "wind_kph": 3.6,
-   "wind_color": "#E0F7FA",
-   "cloud": 100,
-   "cloud_color": "#616161"
-   }
-   ]
+     "bulk": [
+               {
+                 "name": "New York",
+                 "country": "United States of America",
+                 "lat": 40.7142,
+                 "lon": -74.0064,
+                 "temp_c": 1.7,
+                 "temp_color": "#E6F7FF",
+                 "wind_kph": 15.1,
+                 "wind_color": "#B2EBF2",
+                 "cloud": 75,
+                 "cloud_color": "#9E9E9E"
+               },
+               {
+                 "name": "London",
+                 "country": "United Kingdom",
+                 "lat": 51.5171,
+                 "lon": -0.1062,
+                 "temp_c": 3.1,
+                 "temp_color": "#E6F7FF",
+                 "wind_kph": 4.7,
+                 "wind_color": "#E0F7FA",
+                 "cloud": 100,
+                 "cloud_color": "#616161"
+               },
+               {
+                 "name": "Tashkent",
+                 "country": "Uzbekistan",
+                 "lat": 41.3167,
+                 "lon": 69.25,
+                 "temp_c": 1.3,
+                 "temp_color": "#E6F7FF",
+                 "wind_kph": 3.6,
+                 "wind_color": "#E0F7FA",
+                 "cloud": 100,
+                 "cloud_color": "#616161"
+               }
+             ]
    }
    ```
 
@@ -247,46 +247,48 @@ The Weather API Service provides weather data retrieval capabilities, including 
    - **Request Body:**
 
    ```bash
-   {
-   "locations": [
-   {
-   "q": "new york"
-   },
-   {
-   "q": "london"
-   },
-   {
-   "q": "tashkent"
-   },
-   {
-   "q": "locationNotFound"
-   }
-   ]
-   }
+   curl --location --request POST 'localhost:8080/api/v1/weather.current?key={your-api-key}&q=bulk' \
+   --header 'Content-Type: application/json' \
+   --data '{
+             "locations": [
+                             {
+                               "q": "new york"
+                             },
+                             {
+                               "q": "london"
+                             },
+                             {
+                               "q": "tashkent"
+                             },
+                             {
+                               "q": "locationNotFound"
+                             }
+                           ]
+           }
    ```
 
    - **Response:**
 
    ```bash
    {
-   "bulk": [
-   ...
-   {
-   "name": "Tashkent",
-   "country": "Uzbekistan",
-   "lat": 41.3167,
-   "lon": 69.25,
-   "temp_c": 2.3,
-   "temp_color": "#E6F7FF",
-   "wind_kph": 3.6,
-   "wind_color": "#E0F7FA",
-   "cloud": 100,
-   "cloud_color": "#616161"
-   }
-   ],
-   "not_found": [
-   "'locationNotFound' not found"
-   ]
+     "bulk": [
+               ...
+               {
+               "name": "Tashkent",
+               "country": "Uzbekistan",
+               "lat": 41.3167,
+               "lon": 69.25,
+               "temp_c": 2.3,
+               "temp_color": "#E6F7FF",
+               "wind_kph": 3.6,
+               "wind_color": "#E0F7FA",
+               "cloud": 100,
+               "cloud_color": "#616161"
+               }
+               ],
+               "not_found": [
+               "'locationNotFound' not found"
+             ]
    }
    ```
 
