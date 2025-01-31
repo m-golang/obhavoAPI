@@ -293,3 +293,4 @@ func (s *WeatherAPIService) UpdateWeatherDataInTheRedisCache() error {
 	// Return nil when the update process is complete.
 	return nil
 }
+ 

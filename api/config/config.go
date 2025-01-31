@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 )
-
+ 
 // LoadEnvironmentVariable retrieves the value of an environment variable by its key.
 // It returns the value of the environment variable as a string if it exists,
 // or an error if the variable is not set or is empty.

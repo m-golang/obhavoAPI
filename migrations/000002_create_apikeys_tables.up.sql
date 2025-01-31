@@ -10,3 +10,4 @@ CREATE TABLE api_keys (
 ALTER TABLE api_keys ADD INDEX idx_user_id (user_id);
 
 ALTER TABLE api_keys ADD UNIQUE INDEX idx_api_key (api_key);
+ 

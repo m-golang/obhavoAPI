@@ -119,7 +119,7 @@ func (service *UserHandler) Logout(c *gin.Context) {
 		"message": "You are now logged out. Have a great day!",
 	})
 }
-
+ 
 // UserDashboard fetches the user's API key and returns it in the response.
 // The user must be authenticated and the ID is extracted from the context.
 func (service *UserHandler) UserDashboard(c *gin.Context) {

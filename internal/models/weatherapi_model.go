@@ -45,3 +45,4 @@ func (msql *MySQL) CheckUserAPIKey(apiKey string) (bool, error) {
 	// If no matching rows are found, return the custom error indicating the API key is not found
 	return false, ErrAPIKeyNotFound
 }
+ 

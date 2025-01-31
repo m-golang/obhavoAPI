@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
-
+ 
 // CreateAndSignJWT generates a JWT token for a given user ID.
 // The token includes the user's ID (userID) and an expiration time (ttl).
 // The token is signed with a secret key stored in the environment variables.

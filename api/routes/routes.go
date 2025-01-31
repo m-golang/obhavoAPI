@@ -58,3 +58,4 @@ func Route(h *ServeHandlerWrapper) *gin.Engine {
 	// This allows the Gin engine to process requests according to the defined routes and handlers.
 	return router
 }
+ 

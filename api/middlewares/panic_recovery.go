@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
-
+ 
 // RecoverPanic is a middleware that handles panics in the Gin application.
 // If a panic occurs during request processing, it will recover from the panic
 // and return a 500 Internal Server Error response to the client.
