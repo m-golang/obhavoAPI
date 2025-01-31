@@ -65,6 +65,7 @@ The Weather API Service provides weather data retrieval capabilities, including 
 
 3. Start the application:
    ```bash
+   go mod tidy
    go run ./cmd/...
    ```
 
