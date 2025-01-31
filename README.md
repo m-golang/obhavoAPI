@@ -312,8 +312,7 @@ The Weather API Service provides weather data retrieval capabilities, including 
     "not_found": [
         "'locationNotFound' not found"
     ]
-}
-   ```
+  }```
 
 ## Error Handling
 
