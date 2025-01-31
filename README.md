@@ -71,7 +71,7 @@ The Weather API Service provides weather data retrieval capabilities, including 
 
 ## API Endpoints
 
-1. ###User Registration
+1. ### User Registration
 
 - **Endpoint:** `POST /api/v1/signup`
 - **Description:** Registers a new user with the given details.
