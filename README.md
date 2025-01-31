@@ -11,11 +11,12 @@ A robust and efficient weather data service that allows users to fetch weather i
   - [User Registration](#user-registration)
   - [User Authentication](#user-authentication)
   - [User Dashboard](#user-dashboard)
+  - [User Logout](#user-logout)
   - [Fetch Weather Data](#fetch-weather-data)
   - [Fetch Bulk Weather Data](#fetch-bulk-weather-data)
-- [Update Weather Data in Redis Cache](#update-weather-data-in-redis-cache)
 - [Error Handling](#error-handling)
 - [Redis Cache](#redis-cache)
+- [Cron Job](#cron-job-for-periodic-cache-updates)
 
 ## Overview
 
@@ -78,17 +79,17 @@ The Weather API Service provides weather data retrieval capabilities, including 
 - **Request Body:**
   ``bash
   {
-  "name": "John",
-  "surname": "Doe",
-  "username": "johndoe",
-  "password": "password123"
+    "name": "John",
+    "surname": "Doe",
+    "username": "johndoe",
+    "password": "password123"
   }
 
 - **Response:**
 
   ```bash
   {
-  "message": "User registered successfully."
+    "message": "User registered successfully."
   }
 
   ```
@@ -105,8 +106,8 @@ The Weather API Service provides weather data retrieval capabilities, including 
 
    ```bash
     {
-    "username": "johndoe",
-    "password": "password123"
+      "username": "johndoe",
+      "password": "password123"
     }
    ```
 
@@ -114,7 +115,7 @@ The Weather API Service provides weather data retrieval capabilities, including 
 
    ```bash
    {
-   "message": "Login complete! Explore what's new!"
+     "message": "Login complete! Explore what's new!"
    }
    ```
 
@@ -122,7 +123,27 @@ The Weather API Service provides weather data retrieval capabilities, including 
    - `401 Unauthorized` - Invalid credentials.
    - `404 Not Found` - User not found.
 
-3. ### Fetch Weather Data
+3. ### User Dashboard
+   - **Endpoint:** `GET /api/v1/user/dashboard`
+   - **Description:** Authenticated user gets API key.
+   - **Response:**
+
+   ```bash
+   {
+     "your API key": {your-API-key},
+   }
+   ```
+4. ### User Logut
+   - **Endpoint:** `GET /api/v1/logout`
+   - **Description:** User logout.
+   - **Response:**
+
+   ```bash
+   {
+    "message": "You are now logged out. Have a great day!"
+   }
+   ```
+5. ### Fetch Weather Data
 
    - **Call:** `GET localhost:8080/api/v1/weather.current?key={your-api-key}&q={location}`
    - **Description:** Fetches weather data for a specific location.
@@ -151,7 +172,7 @@ The Weather API Service provides weather data retrieval capabilities, including 
    - `404 Not Found` - Location not found.
    - `500 Internal` Server Error - Error fetching data.
 
-4. ### Fetch Bulk Weather Data
+6. ### Fetch Bulk Weather Data
 
    - **Call:** `POST localhost:8080/api/v1/weather.current?key={your-api-key}&q=bulk`
    - **Description:** Fetches weather data for multiple locations.
@@ -284,7 +305,6 @@ Weather data for locations is cached in Redis to improve performance and reduce 
 A cron job is set up to automatically refresh the weather data cache at regular intervals. This helps ensure that cached data is up-to-date, even if no new requests are made.
 
 ### Cron Job Details:
-
-    - **Job Frequency:** Every 30 minutes.
-    - **Job Function:** The cron job fetches weather data for a predefined list of locations (e.g., major cities or countries) and updates the Redis cache.
-    - **Purpose:** To keep the cache updated periodically and minimize delays for users accessing weather data, ensuring that they always get the latest information.
+- **Job Frequency:** Every 30 minutes.
+- **Job Function:** The cron job fetches weather data for a predefined list of locations (e.g., major cities or countries) and updates the Redis cache.
+- **Purpose:** To keep the cache updated periodically and minimize delays for users accessing weather data, ensuring that they always get the latest information.
